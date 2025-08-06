@@ -1,22 +1,10 @@
 package house
 
 import (
-    "time"
+	"time"
 )
 
-type House struct {
-    ID          string
-    Address     string
-    Owner       string
-    AreaSqM     float64
-    AppraisedAt time.Time
-    Value       float64
-    NumBedrooms  int
-    NumBathrooms int
-    HasGarage    bool
-    YearBuilt    int
-}
-
+// HouseService provides appraisal logic for House properties
 type HouseService struct{}
 
 func (s *HouseService) Appraise(house House) House {

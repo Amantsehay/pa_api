@@ -1,12 +1,15 @@
 package house
 
 import (
-    "encoding/json"
-    "net/http"
+	"encoding/json"
+	"net/http"
+	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type House struct {
-    ID          string    `json:"id"`
+    ID          string    `json:"id" gorm:"primaryKey"`
     Address     string    `json:"address"`
     Owner       string    `json:"owner"`
     AreaSqM     float64   `json:"area_sqm"`
@@ -20,6 +23,7 @@ type House struct {
 
 type HouseService interface {
     Appraise(house House) House
+    Save(house House) error
 }
 
 type HouseHandler struct {
@@ -35,4 +39,17 @@ func (h *HouseHandler) AppraiseHandler(w http.ResponseWriter, r *http.Request) {
     appraised := h.Service.Appraise(house)
     w.Header().Set("Content-Type", "application/json")
     json.NewEncoder(w).Encode(appraised)
+}
+
+func (h *HouseHandler) CreateHouseHandler(c *gin.Context) {
+    var house House
+    if err := c.ShouldBindJSON(&house); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+    if err := h.Service.Save(house); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save house"})
+        return
+    }
+    c.JSON(http.StatusCreated, house)
 }

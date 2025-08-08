@@ -3,7 +3,7 @@ package house
 import "time"
 
 type House struct {
-    ID          string    `json:"id"`
+    ID          string    `json:"id" gorm:"primaryKey"`
     Address     string    `json:"address"`
     Owner       string    `json:"owner"`
     AreaSqM     float64   `json:"area_sqm"`

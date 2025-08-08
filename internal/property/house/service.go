@@ -1,6 +1,7 @@
 package house
 
 import (
+	"pa_api/internal/db"
 	"time"
 )
 
@@ -15,4 +16,8 @@ func (s *HouseService) Appraise(house House) House {
     house.Value = value
     house.AppraisedAt = time.Now()
     return house
+}
+
+func (s *HouseService) Save(house House) error {
+    return db.DB.Create(&house).Error
 }
